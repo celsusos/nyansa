@@ -1,4 +1,4 @@
-FROM mirror.gcr.io/library/node:24-slim AS web-builder
+FROM mirror.gcr.io/library/node:26-slim AS web-builder
 
 RUN npm install --global bun@1.3.14
 

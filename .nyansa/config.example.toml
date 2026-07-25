@@ -1,0 +1,33 @@
+approval = "on-request"
+
+[model]
+provider = "openai_compatible"
+name = "poolside/laguna-s-2.1:free"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "NYANSA_API_KEY"
+requires_api_key = true
+
+[actor]
+user_id = "root"
+organization_id = "00000000-0000-0000-0000-000000000000"
+role = "root"
+
+[control_plane]
+enabled = true
+base_url = "http://localhost:8080"
+token_env = "NYANSA_CONTROL_TOKEN"
+fail_closed = true
+sync_actor = true
+send_audit_events = true
+
+[audit]
+enabled = true
+log_content = false
+
+[sensitive_data]
+enabled = true
+redact_before_model = true
+redact_audit_events = true
+
+[role_policy]
+enabled = true

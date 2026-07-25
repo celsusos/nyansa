@@ -1,0 +1,79 @@
+services:
+  control-plane:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      NYANSA_PRODUCTION: "true"
+      NYANSA_BOOTSTRAP_SECRET: "${NYANSA_BOOTSTRAP_SECRET:?set bootstrap secret}"
+      NYANSA_TOKEN_PEPPER: "${NYANSA_TOKEN_PEPPER:?set token pepper}"
+      NYANSA_ATTESTATION_KEY_SEED: "${NYANSA_ATTESTATION_KEY_SEED:?set attestation key seed}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-nyansa}:${POSTGRES_PASSWORD:?set postgres password}@postgres:5432/${POSTGRES_DB:-nyansa}"
+      BASE_URL: "${BASE_URL:-https://openrouter.ai/api/v1}"
+      NYANSA_API_KEY: "${NYANSA_API_KEY:-}"
+      NYANSA_MICROSOFT_ENABLED: "${NYANSA_MICROSOFT_ENABLED:-false}"
+      NYANSA_MICROSOFT_TENANT: "${NYANSA_MICROSOFT_TENANT:-organizations}"
+      NYANSA_MICROSOFT_CLIENT_ID: "${NYANSA_MICROSOFT_CLIENT_ID:-}"
+      NYANSA_MICROSOFT_CLIENT_SECRET: "${NYANSA_MICROSOFT_CLIENT_SECRET:-}"
+      NYANSA_MICROSOFT_REDIRECT_URI: "${NYANSA_MICROSOFT_REDIRECT_URI:-}"
+      NYANSA_MICROSOFT_ALLOWED_DOMAINS: "${NYANSA_MICROSOFT_ALLOWED_DOMAINS:-}"
+      NYANSA_MICROSOFT_DOMAIN_ORG_MAP: "${NYANSA_MICROSOFT_DOMAIN_ORG_MAP:-}"
+      NYANSA_MICROSOFT_AUTO_PROVISION: "${NYANSA_MICROSOFT_AUTO_PROVISION:-true}"
+      NYANSA_MICROSOFT_DEFAULT_ROLE: "${NYANSA_MICROSOFT_DEFAULT_ROLE:-developer}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen(''http://127.0.0.1:8080/health'').status==200 else 1)"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  # TLS termination for production. Enable with:  docker compose --profile tls up
+  # In production, do NOT also publish control-plane:8080 to the host — reach the
+  # app only through https via caddy (set DOMAIN to your public hostname).
+  caddy:
+    image: mirror.gcr.io/library/caddy:2
+    profiles: ["tls"]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: "${DOMAIN:-localhost}"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - control-plane
+    restart: unless-stopped
+
+  postgres:
+    image: mirror.gcr.io/library/postgres:18
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-nyansa}"
+      POSTGRES_USER: "${POSTGRES_USER:-nyansa}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?set postgres password}"
+      PGDATA: "/var/lib/postgresql/18/docker"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'PGPASSWORD="$${POSTGRES_PASSWORD}" psql -h 127.0.0.1 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}" -c ''select 1'' >/dev/null',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  caddy-data:
+  caddy-config:

@@ -1,0 +1,79 @@
+# Secret scanning config. Run locally before pushing:
+#   docker run --rm -v "$PWD:/repo" -w /repo zricethezav/gitleaks:latest \
+#     detect --source=/repo --config=/repo/.gitleaks.toml --redact --verbose
+
+title = "Nyansa"
+
+# Start from the upstream ruleset (AWS, GCP, GitHub, Slack, Stripe, private
+# keys, and ~150 more) and add the credentials specific to this project.
+[extend]
+useDefault = true
+
+[[rules]]
+id = "openrouter-api-key"
+description = "OpenRouter API key"
+regex = '''sk-or-v1-[0-9a-f]{64}'''
+keywords = ["sk-or-v1"]
+
+[[rules]]
+id = "nyansa-token-pepper"
+description = "Nyansa control-plane token pepper"
+regex = '''(?i)nyansa_token_pepper\s*[:=]\s*['"]?([A-Za-z0-9+/=_\-]{24,})['"]?'''
+keywords = ["nyansa_token_pepper"]
+
+[[rules]]
+id = "nyansa-attestation-seed"
+description = "Nyansa Ed25519 attestation key seed"
+regex = '''(?i)nyansa_attestation_key_seed\s*[:=]\s*['"]?([A-Za-z0-9+/=_\-]{24,})['"]?'''
+keywords = ["nyansa_attestation_key_seed"]
+
+[[rules]]
+id = "nyansa-bootstrap-secret"
+description = "Nyansa control-plane bootstrap secret"
+regex = '''(?i)nyansa_bootstrap_secret\s*[:=]\s*['"]?([A-Za-z0-9+/=_\-]{24,})['"]?'''
+keywords = ["nyansa_bootstrap_secret"]
+
+[[rules]]
+id = "nyansa-root-password"
+description = "Nyansa initial root password"
+regex = '''(?i)nyansa_root_password\s*[:=]\s*['"]?([A-Za-z0-9+/=_\-]{16,})['"]?'''
+keywords = ["nyansa_root_password"]
+
+[[rules]]
+id = "postgres-url-with-password"
+description = "Postgres connection string with an inline password"
+regex = '''postgres(?:ql)?://[^:@\s/]+:[^@\s/]+@[^\s/]+'''
+keywords = ["postgres://", "postgresql://"]
+
+[allowlist]
+description = "Placeholders, fixtures, and documented examples"
+
+paths = [
+  '''\.gitleaks\.toml''',
+  '''uv\.lock''',
+  '''bun\.lock''',
+  '''package-lock\.json''',
+  # Not committed, but a local `--no-git` scan walks them.
+  '''__pycache__/''',
+  '''node_modules/''',
+]
+
+regexes = [
+  # .env.example and README placeholders.
+  '''replace-with-[a-z-]+''',
+  '''replace-with-random-[a-z-]+''',
+  # Any value that announces itself as a placeholder.
+  '''[A-Za-z0-9_-]*change-me[A-Za-z0-9_-]*''',
+  # CI service container and local-dev Postgres — nyansa:nyansa is public by
+  # design and reaches only a throwaway container.
+  '''postgres(?:ql)?://nyansa:nyansa@''',
+  '''postgres(?:ql)?://[^:@\s/]+:[^@\s/]+@(localhost|127\.0\.0\.1|postgres)''',
+  # Test fixtures. These must contain secret-shaped strings to be useful:
+  # the redaction, installer, and eval suites assert on exactly these values.
+  '''sk-abcdefghijklmnopqrstuvwxyz''',
+  '''sk-live-9f2c8a41d7b3e6''',
+  '''postgres(?:ql)?://u:p@db''',
+  '''keep-this-(pepper|token)''',
+  # Ollama local dev uses a literal placeholder key.
+  '''NYANSA_API_KEY=local''',
+]

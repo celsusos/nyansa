@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nyansa"
+version = "0.1.0"
+description = "Terminal-based AI coding agent with tools, sessions, hooks, and MCP support."
+readme = "README.md"
+requires-python = ">=3.11"
+# The packaged distribution is the Apache-2.0 agent. The control plane and
+# operator UI in this repository are BUSL-1.1 — see LICENSING.md.
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Celsus" }]
+keywords = ["ai", "agent", "coding-assistant", "llm", "mcp", "governance"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    # No "License ::" classifier — PEP 639 supersedes it with the SPDX
+    # `license` expression above, and setuptools rejects having both.
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
+]
+
+dependencies = [
+    "click>=8.1",
+    "authlib>=1.7.2",
+    "ddgs>=9.0",
+    "fastapi>=0.115",
+    "fastmcp>=2.0",
+    "httpx>=0.27",
+    "openai>=1.0",
+    "platformdirs>=4.0",
+    "psycopg[binary,pool]>=3.3.4",
+    "pydantic>=2.0",
+    "rich>=13.0",
+    "tiktoken>=0.7",
+    "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.com/celsusos/nyansa"
+Repository = "https://github.com/celsusos/nyansa"
+Issues = "https://github.com/celsusos/nyansa/issues"
+Changelog = "https://github.com/celsusos/nyansa/releases"
+
+[project.scripts]
+nyansa = "main:main"
+nyansa-init = "scripts.installer:main"
+nyansa-control-plane = "control_plane.server:main"
+nyansa-control-admin = "scripts.control_plane_admin:main"
+nyansa-eval = "evals.cli:main"
+nyansa-gate = "scripts.merge_gate:main"
+
+[tool.setuptools]
+py-modules = ["main"]
+packages = [
+    "agent",
+    "client",
+    "config",
+    "control_plane",
+    "context",
+    "evals",
+    "evals.tests",
+    "hooks",
+    "prompts",
+    "safety",
+    "scripts",
+    "tools",
+    "tools.builtin",
+    "tools.mcp",
+    "ui",
+    "utils",
+]

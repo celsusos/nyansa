@@ -1,0 +1,12 @@
+Copyright (c) 2026 Celsus. All rights reserved.
+
+This VS Code extension is proprietary. It is provided for internal use by an
+organization operating a self-hosted Nyansa deployment. Distribution outside
+that organization, or use as part of a service offered to third parties,
+requires an explicit license from the copyright holder.
+
+This license covers only the `extensions/vscode-nyansa/` directory. Other parts
+of the Nyansa repository are licensed differently — the agent under Apache-2.0
+and the control plane and operator UI under BUSL-1.1. See ../../LICENSING.md.
+
+Commercial licensing: license@celsusos.com

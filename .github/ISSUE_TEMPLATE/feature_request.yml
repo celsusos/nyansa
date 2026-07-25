@@ -1,0 +1,46 @@
+name: Feature request
+description: Propose a capability or change
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that you cannot do today? Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      validations:
+        required: false
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Agent CLI
+        - Control plane (API)
+        - Operator UI
+        - VS Code extension
+        - Tools / MCP / subagents
+        - Governance (roles, policy, audit, attestation)
+        - Docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including doing nothing, or handling it outside Nyansa.
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to implement this

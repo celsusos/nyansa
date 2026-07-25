@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python tests (+ Postgres integration)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: nyansa
+          POSTGRES_PASSWORD: nyansa
+          POSTGRES_DB: nyansa
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nyansa -d nyansa"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      # Enables the Postgres-backed integration test (skipped when unset).
+      TEST_DATABASE_URL: postgresql://nyansa:nyansa@localhost:5432/nyansa
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run tests
+        run: uv run python -m unittest discover -s tests
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Full history so the scan covers every commit in the PR, not just
+          # the tip. A secret removed in a later commit is still leaked.
+          fetch-depth: 0
+
+      # Uses the release binary rather than gitleaks-action (which requires a
+      # paid licence key for organization-owned repos) or the Docker image
+      # (which hits Docker Hub rate limits on shared runners).
+      - name: Install gitleaks
+        env:
+          GITLEAKS_VERSION: "8.28.0"
+        run: |
+          curl -sSfL -o /tmp/gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Scan for secrets
+        run: |
+          gitleaks detect \
+            --source=. \
+            --config=.gitleaks.toml \
+            --redact \
+            --verbose \
+            --exit-code=1
+
+  ui:
+    name: UI typecheck + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agent-ui
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - name: Install Bun
+        run: npm install --global bun@1.3.14
+
+      - name: Install UI dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Build
+        run: bun run build

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/celsusos/nyansa/security/advisories/new
+    about: Never report security issues in public issues. Use private vulnerability reporting.
+  - name: Question or discussion
+    url: https://github.com/celsusos/nyansa/discussions
+    about: Setup help, model configuration, deployment questions.
+  - name: Commercial licensing and hosted deployments
+    url: mailto:license@celsusos.com
+    about: Reselling the control plane, commercial licenses, support agreements.

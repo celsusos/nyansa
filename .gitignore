@@ -1,0 +1,52 @@
+# ---------------------------------------------------------------------------
+# Secrets — nothing matching these may ever be committed.
+# `.env*` is deliberately broad so stray copies (.env.bak, .env.local,
+# .env.prod, .env.save) are covered by default. Add new example files to the
+# allow-list below explicitly.
+# ---------------------------------------------------------------------------
+.env*
+!.env.example
+
+# Control-plane host secrets — must never leave the host.
+token_pepper.key
+attestation_signing_key.pem
+*.pem
+*.key
+
+# Local developer state written by nyansa-init / make dev-setup.
+.dev/
+.nyansa/config.toml
+*.bak
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# JavaScript / UI
+# ---------------------------------------------------------------------------
+node_modules/
+agent-ui/.quasar/
+agent-ui/dist/
+agent-ui/quasar.config.*.temporary.compiled.*.mjs
+extensions/vscode-nyansa/*.vsix
+
+# ---------------------------------------------------------------------------
+# Editors and OS
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/

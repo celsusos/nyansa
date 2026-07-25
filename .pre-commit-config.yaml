@@ -1,0 +1,23 @@
+# Local guard rails. Install once:
+#   uv tool install pre-commit && pre-commit install
+#
+# The secret scan here is the same one CI runs. Catching a leak locally means
+# it never enters git history; catching it in CI means a history rewrite.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending

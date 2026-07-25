@@ -1,0 +1,17 @@
+# Sponsorship targets for Nyansa.
+#
+# ACTION REQUIRED before this file does anything:
+#   1. Enable GitHub Sponsors and replace the placeholder below with your real
+#      handle: https://github.com/sponsors
+#      Start with your personal account — org sponsorship needs the Celsus org
+#      to be in a Stripe-Connect-supported region with a bank account, which
+#      takes longer to approve.
+#   2. Delete every line you are not actually using. A FUNDING.yml pointing at
+#      a 404 is worse than no sponsor button.
+
+github: [REPLACE-WITH-YOUR-GITHUB-USERNAME]
+
+# open_collective: nyansa
+# polar: celsus
+# buy_me_a_coffee: nyansa
+# custom: ["https://nyansa.dev/sponsor"]

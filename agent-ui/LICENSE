@@ -1,0 +1,13 @@
+Business Source License 1.1
+
+The Nyansa operator UI (`agent-ui/`) is licensed under the Business Source
+License 1.1, on the same terms as the Nyansa Control Plane.
+
+The authoritative license text, including the Licensor, Additional Use Grant,
+Change Date, and Change License parameters that govern this directory, is
+located at:
+
+    ../control_plane/LICENSE
+
+See ../LICENSING.md for an overview of how licensing is split across this
+repository.

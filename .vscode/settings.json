@@ -1,0 +1,6 @@
+{
+  "nyansa.controlPlaneUrl": "http://127.0.0.1:8080",
+  "nyansa.envFile": ".dev/env",
+  "nyansa.tokenEnv": "NYANSA_CONTROL_TOKEN",
+  "nyansa.cliCommand": "uv run nyansa"
+}

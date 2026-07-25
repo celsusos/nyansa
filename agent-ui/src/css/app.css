@@ -1,0 +1,422 @@
+/* ------------------------------------------------------------------ *
+ * Design tokens. One source of truth for color; light + dark.
+ * Quasar toggles `body.body--dark`, which flips these variables — its
+ * own components follow $q.dark automatically, so we only theme ours.
+ * ------------------------------------------------------------------ */
+:root {
+  --bg-page: #f4f6f8;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #fbfcfd;
+  --text-primary: #20252b;
+  --text-secondary: #647184;
+  --border: #dfe5eb;
+  --border-subtle: #e5e9ee;
+  --accent: #1f6f5b;
+  --accent-soft-bg: #e7f1ee;
+  --code-bg: #eef2f5;
+  --code-text: #31485f;
+  --alert-bg: #fff4f2;
+  --alert-border: #f0b8ae;
+  --notice-bg: #fff8e8;
+  --notice-border: #f2d49b;
+  --ok-bg: #f1fbf5;
+  --ok-border: #b8dec9;
+  --shadow: 0 1px 2px rgba(20, 37, 63, 0.04);
+
+  --page-max: 1440px;
+  --radius: 10px;
+}
+
+body.body--dark {
+  --bg-page: #0f1319;
+  --bg-surface: #171d26;
+  --bg-surface-2: #131922;
+  --text-primary: #e6eaf0;
+  --text-secondary: #9aa7b8;
+  --border: #2a323d;
+  --border-subtle: #232b35;
+  --accent: #6fd0b6;
+  --accent-soft-bg: rgba(31, 111, 91, 0.22);
+  --code-bg: #222a34;
+  --code-text: #c2cede;
+  --alert-bg: rgba(180, 35, 24, 0.12);
+  --alert-border: rgba(240, 184, 174, 0.35);
+  --notice-bg: rgba(154, 103, 0, 0.14);
+  --notice-border: rgba(242, 212, 155, 0.3);
+  --ok-bg: rgba(22, 120, 76, 0.12);
+  --ok-border: rgba(184, 222, 201, 0.3);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base + typography (rem-based so it respects the user's font size;
+ * fluid headings via clamp).
+ * ------------------------------------------------------------------ */
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.console-shell {
+  background: var(--bg-page);
+}
+
+.console-header {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.toolbar {
+  min-height: 60px;
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.title-block small {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.org-select {
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.console-drawer {
+  background: var(--bg-surface-2);
+}
+
+/* A vertical nav should never scroll sideways — belt-and-suspenders in case any
+ * child is wider than the drawer. */
+.console-drawer .q-drawer__content {
+  overflow-x: hidden;
+}
+
+.identity {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Let the text column shrink so a long username/email truncates instead of
+ * overflowing the fixed-width drawer (which caused a horizontal scrollbar). */
+.identity > div {
+  min-width: 0;
+}
+
+.identity strong,
+.identity span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.identity span {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.active-nav {
+  background: var(--accent-soft-bg);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.drawer-footer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px;
+  position: absolute;
+  bottom: 0;
+}
+
+.console-page {
+  padding: 24px;
+  max-width: var(--page-max);
+  margin: 0 auto;
+}
+
+.alert-band {
+  margin-bottom: 16px;
+  border: 1px solid var(--alert-border);
+  background: var(--alert-bg);
+}
+
+.setup-alert {
+  border: 1px solid var(--notice-border);
+  background: var(--notice-bg);
+}
+
+.auth-panel {
+  min-height: calc(100vh - 108px);
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(280px, 420px);
+  gap: 48px;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-copy h1,
+.view-heading h1,
+.panel-title h2,
+.dialog-card h2 {
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.auth-copy h1,
+.view-heading h1 {
+  font-size: clamp(1.5rem, 1.1rem + 1.5vw, 1.75rem);
+  line-height: 1.2;
+}
+
+.auth-copy p,
+.view-heading p {
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.auth-form,
+.dialog-form {
+  display: grid;
+  gap: 12px;
+}
+
+.view-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.view-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.metric-card span,
+.metric-card strong {
+  display: block;
+}
+
+.metric-card span {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-card strong {
+  margin-top: 8px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.negative {
+  color: #b42318;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) 1fr;
+  gap: 16px;
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.panel,
+.policy-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow);
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.panel-title h2,
+.dialog-card h2 {
+  font-size: 1.0625rem;
+}
+
+.tool-cloud {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px;
+}
+
+.row-actions {
+  min-width: 132px;
+}
+
+.policy-tabs {
+  color: var(--text-secondary);
+}
+
+.policy-body {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 16px;
+}
+
+.usage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  padding: 18px;
+}
+
+.setup-form {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.provider-note {
+  border: 1px solid var(--ok-border);
+  background: var(--ok-bg);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.result-ok {
+  border: 1px solid var(--ok-border);
+  background: var(--ok-bg);
+}
+
+.result-bad {
+  border: 1px solid var(--alert-border);
+  background: var(--alert-bg);
+}
+
+.snippet-box {
+  padding: 16px;
+}
+
+.snippet-box textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.guide-steps {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.dialog-card {
+  width: min(440px, calc(100vw - 32px));
+  border-radius: var(--radius);
+}
+
+/* Data tables stay readable on narrow screens: they scroll horizontally
+ * inside their own card instead of blowing out the page width. */
+.data-table {
+  max-width: 100%;
+}
+
+code {
+  white-space: nowrap;
+  color: var(--code-text);
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Responsive: tablet (<=900px) and mobile (<=560px).
+ * ------------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .console-page {
+    padding: 16px;
+  }
+
+  .auth-panel,
+  .content-grid,
+  .setup-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-panel {
+    gap: 24px;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+
+  .view-heading {
+    flex-direction: column;
+  }
+
+  .org-select {
+    min-width: 160px;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 560px) {
+  .console-page {
+    padding: 12px;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title-block small {
+    display: none;
+  }
+
+  .org-select {
+    min-width: 128px;
+    max-width: 148px;
+  }
+}

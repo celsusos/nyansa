@@ -1,0 +1,179 @@
+{
+  "name": "nyansa-vscode",
+  "displayName": "Nyansa",
+  "description": "VS Code integration for the self-hosted Nyansa control plane and CLI.",
+  "version": "0.1.0",
+  "publisher": "nyansa",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "activationEvents": [
+    "onView:nyansa.identity",
+    "onView:nyansa.sessions",
+    "onCommand:nyansa.startInteractive",
+    "onCommand:nyansa.openAssistant",
+    "onCommand:nyansa.configureEnvironment",
+    "onCommand:nyansa.runPrompt",
+    "onCommand:nyansa.refresh",
+    "onCommand:nyansa.openControlPlane",
+    "onCommand:nyansa.showCapabilities",
+    "onCommand:nyansa.revokeSession"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Nyansa",
+      "properties": {
+        "nyansa.controlPlaneUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8080",
+          "description": "FastAPI control-plane base URL."
+        },
+        "nyansa.tokenEnv": {
+          "type": "string",
+          "default": "NYANSA_CONTROL_TOKEN",
+          "description": "Environment variable containing the control-plane bearer token."
+        },
+        "nyansa.envFile": {
+          "type": "string",
+          "default": ".env",
+          "description": "Workspace-relative env file to load before launching the CLI."
+        },
+        "nyansa.cliCommand": {
+          "type": "string",
+          "default": "uv run nyansa",
+          "description": "Command used to launch the Nyansa CLI."
+        },
+        "nyansa.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Python interpreter path to expose to the Nyansa CLI as PYTHON and prepend to PATH."
+        },
+        "nyansa.extraEnv": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional environment variables passed to Nyansa terminals and Assistant runs."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "nyansa.openAssistant",
+        "title": "Nyansa: Open Assistant",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "nyansa.configureEnvironment",
+        "title": "Nyansa: Configure Environment",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "nyansa.startInteractive",
+        "title": "Nyansa: Start Interactive Session",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "nyansa.runPrompt",
+        "title": "Nyansa: Run Prompt",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "nyansa.refresh",
+        "title": "Nyansa: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "nyansa.openControlPlane",
+        "title": "Nyansa: Open Control Plane",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "nyansa.showCapabilities",
+        "title": "Nyansa: Show Capabilities",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "nyansa.revokeSession",
+        "title": "Nyansa: Revoke Session",
+        "icon": "$(circle-slash)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "nyansa",
+          "title": "Nyansa",
+          "icon": "resources/activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "nyansa": [
+        {
+          "id": "nyansa.assistant",
+          "name": "Assistant",
+          "type": "webview"
+        },
+        {
+          "id": "nyansa.identity",
+          "name": "Identity"
+        },
+        {
+          "id": "nyansa.sessions",
+          "name": "Sessions"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "nyansa.refresh",
+          "when": "view == nyansa.identity || view == nyansa.sessions",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "nyansa.revokeSession",
+          "when": "view == nyansa.sessions && viewItem == activeSession",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "nyansa.openAssistant"
+        },
+        {
+          "command": "nyansa.configureEnvironment"
+        },
+        {
+          "command": "nyansa.startInteractive"
+        },
+        {
+          "command": "nyansa.runPrompt"
+        },
+        {
+          "command": "nyansa.openControlPlane"
+        },
+        {
+          "command": "nyansa.showCapabilities"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "check": "node --check src/extension.js",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.1"
+  }
+}

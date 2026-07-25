@@ -1,0 +1,9 @@
+# Reverse proxy that terminates TLS in front of the control plane.
+#
+# Set DOMAIN to your public hostname and Caddy provisions a real certificate
+# automatically (Let's Encrypt). Left as "localhost", Caddy serves HTTPS with its
+# own local CA — fine for testing, not for the public internet.
+{$DOMAIN:localhost} {
+	encode gzip
+	reverse_proxy control-plane:8080
+}

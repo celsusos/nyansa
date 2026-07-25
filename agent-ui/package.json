@@ -28,7 +28,7 @@
     "autoprefixer": "^10.4.27",
     "oxfmt": "^0.x",
     "oxlint": "^1.x",
-    "oxlint-tsgolint": "^0.x",
+    "oxlint-tsgolint": "^7.x",
     "typescript": "^5.8.3",
     "vite": "^8.1.0",
     "vue-tsc": "^3.3.3"

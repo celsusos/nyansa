@@ -667,10 +667,11 @@
                 </div>
               </q-card-section>
               <q-card-section>
-                <div class="tool-grid">
+                <div class="readiness-pills">
                   <q-chip
                     v-for="(ok, check) in store.productionReadiness.checks"
                     :key="check"
+                    class="readiness-pill"
                     dense
                     outline
                     :color="ok ? 'positive' : 'warning'"

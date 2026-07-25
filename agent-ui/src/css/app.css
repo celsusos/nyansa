@@ -301,6 +301,25 @@ body {
   gap: 10px 16px;
 }
 
+.readiness-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 12px;
+}
+
+.readiness-pill {
+  margin: 0;
+  max-width: 100%;
+}
+
+.readiness-pill .q-chip__content {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
 .usage-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

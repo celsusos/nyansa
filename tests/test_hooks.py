@@ -1,5 +1,7 @@
 import os
+import shlex
 import stat
+import sys
 import unittest
 from pathlib import Path
 
@@ -162,13 +164,19 @@ class InlineScriptHookTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_inline_script_is_not_world_accessible(self):
         # The script reports its own directory and file modes before exiting.
+        python = shlex.quote(sys.executable)
         system = HookSystem(
             make_config(
                 HookConfig(
                     name="inline-perms",
                     trigger=HookTrigger.BEFORE_TOOL,
-                    script='stat -f "%Lp %Lp" "$0" "$(dirname "$0")" 2>/dev/null '
-                    '|| stat -c "%a %a" "$0" "$(dirname "$0")"\n',
+                    script=(
+                        f"{python} -c 'import os, stat, sys; "
+                        "print(\"%o %o\" % ("
+                        "stat.S_IMODE(os.stat(sys.argv[1]).st_mode), "
+                        "stat.S_IMODE(os.stat(sys.argv[2]).st_mode)))' "
+                        '"$0" "$(dirname "$0")"\n'
+                    ),
                 )
             )
         )

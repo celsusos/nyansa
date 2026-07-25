@@ -33,6 +33,7 @@ updates:
     schedule:
       interval: "monthly"
     ignore:
+      - dependency-name: "astral-sh/setup-uv"
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
 
